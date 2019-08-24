@@ -16,7 +16,6 @@ class DefaultAside extends Component {
 
     return (
       <React.Fragment>
-        Aside
       </React.Fragment>
     );
   }

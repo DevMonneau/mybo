@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
-
+import { AuthUserContext } from '../../tools/AuthUser';
 import {
   AppAside,
   AppBreadcrumb,
@@ -25,7 +25,7 @@ const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center"><div className="sk-spinner sk-spinner-pulse"></div></div>;
-
+  
   render() {
     return (
       <div className="app">
@@ -49,19 +49,22 @@ class DefaultLayout extends Component {
             <Container fluid>
               <Suspense fallback={this.loading()}>
                 <Switch>
-                  {routes.map((route, idx) => {
-                    return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => (
-                          <route.component {...props} />
-                        )} />
-                    ) : (null);
-                  })}
-                  <Redirect from="/" to="/dashboard" />
+                    <AuthUserContext.Consumer>
+                      {authUser => authUser ?
+                      routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                          key={idx}
+                          path={route.path}
+                          exact={route.exact}
+                          name={route.name}
+                          render={props => (
+                            <route.component {...props} />
+                            )} />
+                            ) : (null);
+                          }) :  <Redirect to="/login" />}
+                    </AuthUserContext.Consumer>
+                     <Redirect from="/" to="/dashboard" />
                 </Switch>
               </Suspense>
             </Container>

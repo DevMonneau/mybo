@@ -1,8 +1,8 @@
 export default {
   items: [
     {
-      name: 'Accueil',
-      url: '/acceuil',
+      name: 'Dashboard',
+      url: '/dashboard',
       icon: 'icon-home'
     },
     {
@@ -22,7 +22,7 @@ export default {
     },
     {
       name: 'Clients',
-      url: '/finance',
+      url: '/clients',
       icon: 'cui-credit-card'
     },
     {

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import { withFirebase } from '../../../tools/Firebase';
 import { compose } from 'recompose';
+import { withFirebase } from '../../../tools/Firebase';
+import * as ROUTES from '../../../components/constants/router';
 
 const INITIAL_STATE = {
   username: '',
@@ -31,7 +32,7 @@ class Login extends Component {
       .then((authUser) => {
         console.log(authUser)
         this.setState({ ...INITIAL_STATE });
-        //this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.LANDING);
       })
       .catch(error => {
         this.setState({ error });
@@ -41,12 +42,14 @@ class Login extends Component {
   }
 
   onSignSubmit = (e) => {
-    const { signemail, signpassword } = this.state;
+    const { signemail, signpassword, username } = this.state;
 
     this.props.firebase
       .createUserByMail(signemail, signpassword)
       .then(authUser => {
         console.log(authUser)
+        this.props.firebase.createUser(username, signemail, authUser.user.uid)
+        .then(() => {console.log('success'); this.props.history.push(ROUTES.LANDING)});
         this.setState({ ...INITIAL_STATE });
       })
       .catch(error => {

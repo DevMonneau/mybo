@@ -1,5 +1,7 @@
 import app from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/storage'
 
 const prodConfig = {
     apiKey: process.env.REACT_APP_PROD_API_KEY,
@@ -25,7 +27,15 @@ class Firebase {
     constructor() {
         app.initializeApp(config);
         this.auth = app.auth();
+        this.db = app.database();
+        this.storage = app.storage();
     }
+
+    user = userid => this.db.ref(`users/${userid}`); // define current user path for db
+
+    /*
+        Auth methods
+    */
 
     createUserByMail = (email, password) =>
         this.auth.createUserWithEmailAndPassword(email, password);
@@ -41,6 +51,9 @@ class Firebase {
     
     updatePassword = password =>
         this.auth.currentUser.updatePassword(password);
+
+    createUser = (username, email, userid) =>
+        this.user(userid).set({ username, email, picture: null });
 }
 
 export default Firebase;
